@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #72585b;
+            color: #a020f0; /* Purple text */
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            height: 100vh;
+            padding: 0 20px;
+        }
+
+        .icon-container {
+            display: flex;
+            flex-direction: column; /* Stacks the icons vertically */
+            align-items: flex-start; /* Aligns to the left */
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .profile-link {
+            font-size: 36px; /* Increased size for profile icon */
+            margin-bottom: 10px; /* Space between the two icons */
+            color: black;
+            text-decoration: none;
+            display: block;
+        }
+
+        .video {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            width: 100%;
+            max-width: 500px; /* Increased video size */
+            height: auto;
+            object-fit: cover; /* Keeps the aspect ratio */
+            cursor: pointer;
+        }
+
+        .video-info {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .username {
+            font-weight: bold;
+            font-size: 32px; /* Larger font for username */
+            color: white;
+            margin: 0;
+        }
+
+        .description {
+            font-size: 20px; /* Larger font for description */
+            color: white;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .button {
+            width: 70px; /* Larger icons */
+            height: 70px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 15px; /* Reduced margin for closeness */
+        }
+
+        .button a, .button span {
+            font-size: 40px; /* Larger font size for the icons */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .button-label {
+            font-size: 16px; /* Larger labels */
+            font-weight: bold; /* Bolder labels */
+            color: black;
+            margin-top: 5px; /* Closer to icons */
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Redirect Icons -->
+        <div class="icon-container">
+            <a href="{% url 'profile' %}" class="profile-link">&#x1F464;</a>
+            <a href="{% url 'myVideos' %}" class="profile-link">&#127916;</a>
+        </div>
+
+        <!-- Video Section -->
+        <div class="video" onclick="togglePlayPause(this)">
+            <video src="{{ post.video.url }}"></video>
+            <div class="video-info">
+                <p class="username">{{ post.user.username }}</p>
+                <p class="description">{{ post.description }}</p>
+            </div>
+        </div>
+
+        <!-- Buttons Section -->
+        <div class="buttons">
+            <div class="button">
+                <a href="{% url 'deletePost' post.pk %}">&#128465;</a>
+            </div>
+            <p class="button-label">Delete</p>
+
+            <div class="button">
+                <a href="{% url 'updatePost' post.pk %}">&#9998;</a>
+            </div>
+            <p class="button-label">Edit</p>
+
+            <div class="button">
+                <span>&#10084;</span>
+            </div>
+            <p class="button-label">{{ post.likes.all.count }}</p>
+
+            <div class="button">
+                <a href="{% url 'mycomments' post.pk %}">&#128172;</a>
+            </div>
+            <p class="button-label">Comment</p>
+        </div>
+    </div>
+
+    <script>
+        function togglePlayPause(videoElement) {
+            const video = videoElement.querySelector('video');
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: rgb(188, 173, 230); 
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-container {
+            background-color: black;
+            color: #9b59b6; /* Deep purple color */
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #9b59b6;
+            border-radius: 15px;
+            width: 350px;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #9b59b6;
+        }
+
+        .username {
+            font-size: 1.5em;
+            margin-top: 15px;
+        }
+
+        .bio {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        /* Styling the links with icons and labels */
+        .links-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .link-box {
+            text-align: center;
+            margin: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .link-box:hover {
+            transform: scale(1.1); /* Hover effect */
+        }
+
+        .link-box i, .link-box label {
+            color: #9b59b6; /* Deep purple for icons and text */
+        }
+
+        .link-box i {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .link-box label {
+            font-size: 1rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <!-- Profile Picture and Info -->
+    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-picture">
+    <h2 class="username">Welcome {{ user.username }}</h2>
+    <p class="bio">{{ user.profile.bio }}</p>
+
+    <!-- Flex Links with Icons -->
+    <div class="links-container">
+        <!-- Update Profile -->
+        <a href="{% url 'updateProfile' %}" class="link-box">
+            <i class="fas fa-user-edit"></i>
+            <label>Update Profile</label>
+        </a>
+
+        <!-- View My Posts -->
+        <a href="{% url 'myVideos' %}" class="link-box">
+            <i class="fas fa-video"></i>
+            <label>My Posts</label>
+        </a>
+
+        <!-- Upload a Video -->
+        <a href="{% url 'create' %}" class="link-box">
+            <i class="fas fa-upload"></i>
+            <label>Upload Video</label>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

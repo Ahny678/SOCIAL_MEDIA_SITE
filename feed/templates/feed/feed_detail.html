@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed Detail</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: #9b59b6;
+        }
+        .all-comments {
+            max-height: 60vh; /* Set max height for scrolling */
+            overflow-y: auto; /* Enable vertical scroll */
+            margin: 20px auto;
+            border: 2px solid purple;
+            padding: 10px;
+            width: 80%;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+        }
+        .comment-box {
+            position: relative;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+            width: 100%;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+        }
+        .comment-header p {
+            margin: 0;
+        }
+        .comment-text {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+        .comment-footer {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        .like-button, .dislike-button {
+            background: none;
+            border: none;
+            color: #9b59b6;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+        .delete-icon {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%); /* Center the icon horizontally */
+            color: #9b59b6;
+            font-size: 1.2em;
+        }
+        .fixed-form {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 10px;
+            border-top: 2px solid purple;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ post.user }} -- {{ post.description }}</h1>
+    <a href="{% url 'feed' %}?page={{ request.GET.page }}">Back to feed</a>
+
+    {% if comments %}
+    <div class="all-comments">
+        {% for comment in comments %}
+        <div class="comment-box {% if post.user == comment.author %}own-comment{% endif %}">
+            <div class="comment-header">
+                <p>{{ comment.author }}</p>
+                <p>{{ comment.created_on|date:"m-y" }}</p>
+            </div>
+            <p class="comment-text">{{ comment.comment }}</p>
+            <div class="comment-footer">
+                <form action="{% url 'like_comment' comment.pk %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="like-button" type="submit">&#10084; {{ comment.likes.count }}</button>
+                </form>
+                <form action="{% url 'dislike_comment' comment.pk %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="dislike-button" type="submit">&#128078; {{ comment.dislikes.count }}</button>
+                </form>
+                {% if post.user %}
+                <a href="{% url 'CommentDeleteView' post.pk comment.pk %}" class="delete-icon">
+                    &#128465;
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="fixed-form">
+        <form method="POST" action="#" style="width: 100%;">
+            {% csrf_token %}
+            {{ comment_form.comment }}
+            <button type="submit" style="padding: 10px 20px; margin-left: 10px; background-color: #9b59b6; color: white; border: none; border-radius: 10px; cursor: pointer;">Send</button>
+        </form>
+    </div>
+</body>
+</html>

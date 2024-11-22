@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: black;
+            color: #9b59b6;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-top: 30px;
+            color: #9b59b6;
+            text-shadow: 2px 2px #000;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            border-bottom: 3px solid purple;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .notifications-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+        }
+
+        .notification-box {
+            width: 60%;
+            max-width: 600px;
+            background-color: #1c1c1c;
+            border: 2px solid #9b59b6;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .notification-box a {
+            text-decoration: none;
+            color: #fff;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .notification-box a:hover {
+            color: #9b59b6;
+        }
+
+        .notification-box p {
+            background-color: black;
+            padding: 15px;
+            border: 2px solid #9b59b6;
+            border-radius: 8px;
+            font-size: 1.2em;
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .notification-box p:hover {
+            background-color: #9b59b6;
+            color: black;
+            cursor: pointer;
+        }
+
+        .notification-box p:active {
+            background-color: #6c3483;
+        }
+
+        /* Special styles for no-profile message */
+        span {
+            display: block;
+            background-color: #9b59b6;
+            color: black;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>You have: {{ notifications.count }} notification(s)</h1>
+
+    <div class="notifications-container">
+        <div class="notification-box">
+            {% for notification in notifications %}
+                {% if notification.post %}
+                    <!-- Post-related notifications -->
+                    <a href="{% url 'postView' notification.pk notification.post.pk %}">
+                        {% if notification.notification_type == 1 %}
+                            <p>{{ notification.from_user }} liked your post</p>
+                        {% elif notification.notification_type == 2 %}
+                            <p>{{ notification.from_user }} commented on your post</p>
+                        {% endif %}
+                    </a>
+                {% else %}
+                    <!-- Follow notifications -->
+                    {% if notification.from_user.profile %}
+                        <a href="{% url 'followView' notification.pk notification.from_user.profile.pk %}">
+                            <p>{{ notification.from_user }} followed you</p>
+                        </a>
+                    {% else %}
+                        <span>User does not have a profile</span>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

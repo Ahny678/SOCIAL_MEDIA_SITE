@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload New Post</title>
+    <style>
+        body {
+            background-color: black;
+            color: black;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #d8bfd8; /* Light purple background */
+            padding: 20px;
+            border-radius: 15px;
+            width: 400px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+        }
+
+        h1 {
+            text-align: center;
+            color: black;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin: 15px 0;
+            border-bottom: 2px solid rgb(56, 9, 9); /* Silver line separating each field */
+            padding-bottom: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: black;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #8a2be2;
+            border-radius: 5px;
+            background-color: #1c1c1c;
+            color: white;
+        }
+
+        .submit-btn {
+            background-color: #8a2be2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .submit-btn:hover {
+            background-color: #6a1bb5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Upload New Post</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Video Field -->
+            <div class="form-group">
+                <label for="{{ form.video.id_for_label }}">Video</label>
+                {{ form.video }}
+            </div>
+
+            <!-- Description Field -->
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}">Add A Caption</label>
+                {{ form.description }}
+            </div>
+
+            <!-- Thumbnail Field -->
+            <div class="form-group">
+                <label for="{{ form.thumbnail.id_for_label }}">Add A Thumbnail</label>
+                {{ form.thumbnail }}
+            </div>
+
+            <button type="submit" class="submit-btn">Post</button>
+        </form>
+    </div>
+
+</body>
+</html>

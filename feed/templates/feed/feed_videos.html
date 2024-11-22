@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: rgb(226, 192, 224);
+            color: #a020f0; /* Purple text */
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .video {
+            width: 280px;
+            height: 500px;
+            background-color: #333;
+            position: relative;
+            margin-right: 20px;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Keeps the aspect ratio */
+            cursor: pointer; /* Makes the video clickable */
+        }
+
+        /* Position username and description at the bottom left of each video */
+        .video-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: rgb(18, 17, 17);
+            z-index: 1;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        .username {
+            margin: 0;
+            padding: 0;
+            font-weight: bold;
+            font-size: 30px; /* Larger and bolder username */
+        }
+
+        .description {
+            margin: 0;
+            padding: 0;
+            font-size: 18px; /* Smaller description */
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-left: 20px;
+        }
+
+        .button {
+            width: 50px;
+            height: 50px;
+            background-color: rgb(201, 55, 133);
+            border-radius: 50%;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .button span {
+            width: 60px;
+            height: 60px;
+            font-size: 40px; /* Large enough to fill the button */
+            color: red
+        }
+
+        .button-label {
+            margin-top: 5px;
+            font-size: 20px;
+            color: rgba(13, 9, 9, 0.916);
+            text-align: center;
+        }
+
+        /* Styling for the arrows (Prev/Next) */
+        .pagination-arrow {
+            position: absolute;
+            top: 50%;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            z-index: 2;
+            transform: translateY(-50%);
+        }
+
+        .prev-arrow {
+            left: 10px;
+        }
+
+        .next-arrow {
+            right: 10px;
+        }
+
+        .pagination-arrow.disabled {
+            display: none; /* Hide the arrow if disabled */
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="video-container">
+        <!-- Video Section -->
+        {% for feed_video in page_obj %}
+        <div class="video">
+            <video src="{{ feed_video.video.url }}"></video>
+            <div class="video-info">
+                <p class="username">{{ feed_video.user.username }}</p>
+                <p class="description">{{ feed_video.description }}</p>
+            </div>
+        </div>
+        
+        <!-- Buttons Section -->
+        <div class="buttons">
+            <form action="" method="POST" id="post-form">
+                {% csrf_token %}
+                <input type="hidden" name="user" id="user" value="{{feed_video.user}}"/>
+                <button type="submit" class="button">  
+                    <img src="{{ feed_video.user.profile.image.url }}" alt="Profile Pic" style="width: 40px; height: 40px; border-radius: 50%;">
+                </button>
+            </form>
+            <p class="button-label">Profile</p>
+            <form action="{% url 'like' feed_video.pk %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}?page={{ page_obj.number }}">
+                <button class="button" type="submit"><span>&#10084;</span></button>
+            </form>
+            <p class="button-label">{{ feed_video.likes.count }}</p>
+
+            <form action="{% url 'dislike' feed_video.pk %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}?page={{ page_obj.number }}">
+                <!-- Changed dislike to thumbs-down icon -->
+                <button class="button" type="submit"><span>&#128078;</span></button>
+            </form>
+            <p class="button-label">{{ feed_video.dislikes.count }}</p>
+
+           
+                <a href="{% url 'FeedVideoDetailView' feed_video.pk %}?page={{ request.GET.page }}">
+
+                <div class="button">
+                    <span>&#128172;</span>
+                </div>
+            </a>
+            <p class="button-label">{{ comments.count }}</p>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Pagination Links (Prev/Next as arrows) -->
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="pagination-arrow prev-arrow">&larr;</a>
+    {% else %}
+        <span class="pagination-arrow prev-arrow disabled">&larr;</span>
+    {% endif %}
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="pagination-arrow next-arrow">&rarr;</a>
+    {% else %}
+        <span class="pagination-arrow next-arrow disabled">&rarr;</span>
+    {% endif %}
+</body>
+
+<script type="text/javascript">
+    // Toggle play/pause on click for video
+    $('video').click(function() {
+        if (this.paused) {
+            this.play();
+        } else {
+            this.pause();
+        }
+    });
+
+    $(document).on('submit', '#post-form', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: '/FeederProfile/',
+            data: {
+                user: $('#user').val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function(data) {
+                window.location.href = data.redirect_url;  
+            },
+            error: function(response) {
+                console.error('Error: ', response);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    });
+</script>
+</html>

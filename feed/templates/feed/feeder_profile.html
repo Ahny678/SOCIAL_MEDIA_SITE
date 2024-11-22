@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <style>
+        body {
+            background-color: black;
+            color: #9b59b6; /* Deep purple color */
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .profile-container {
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #9b59b6;
+            border-radius: 15px;
+            width: 300px;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #9b59b6;
+        }
+
+        .username {
+            font-size: 1.5em;
+            margin-top: 15px;
+        }
+
+        .bio {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+        .fol-button{
+         margin-left: 40px;
+        }
+
+        .fol-button, .msg-button {
+            border-color: rgb(128, 0, 26);
+            background-color: black;
+            color: purple;
+            border-radius: 2%;
+            font-size: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .fol-button:hover{
+            background-color: #b65959;
+            color: black;
+        }
+        
+        .msg-button:hover {
+            background-color: #9b59b6;
+            color: black;
+        }
+
+        .msg-btn {
+            flex: 1;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <img src="{{ feed_profile.image.url }}" alt="Profile Picture" class="profile-picture">
+    <h2 class="username">{{ feed_profile.user.username }}</h2>
+    <p class="fol">Followers</p> <span style="font-size: 20px;">{{ follower_count }}</span>
+
+    {% if feed_profile.user != request.user %}
+        <div class="button-container">
+            {% if is_following %}
+                <form method="POST" action="{% url 'removefollower' feed_profile.pk %}">
+                    {% csrf_token %} 
+                    <button class="fol-button" type="submit">UnFollow</button>
+                </form>
+            {% else %}
+                <form method="POST" action="{% url 'addfollower' feed_profile.pk %}">
+                    {% csrf_token %} 
+                    <button class="fol-button" type="submit">Follow</button>
+                </form>
+            {% endif %}
+            
+            <form method="POST" action="{% url 'createthread' %}" class="msg-btn">
+                {% csrf_token %} 
+                <input type="hidden" name="username" id="username" value="{{ feed_profile.user.username }}"/>
+                <button class="msg-button" type="submit">Message</button>
+            </form>
+        </div>
+    {% endif %}
+    
+    <p class="bio">{{ feed_profile.bio }}</p>
+</div>
+
+</body>
+</html>

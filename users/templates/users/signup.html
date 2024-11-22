@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            background-color: rgba(138, 43, 226, 0.5); /* Velvet color with transparency */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            position: relative;
+            z-index: 2;
+            width: 300px;
+        }
+
+        .container h2 {
+            font-size: 2.5rem;
+        }
+
+        .form-group {
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .form-group input {
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .form-group input:focus {
+            outline: none;
+        }
+
+        .error-message {
+            color: lightgreen;
+            text-align: right;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        button {
+            background-color: velvet;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: darkviolet;
+        }
+
+        /* Spinning Circle */
+        .circle-container {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, red, orange, yellow, green, blue, violet);
+            animation: spin 5s linear infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circle span {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="circle-container">
+        <div class="circle">
+            <span>NOW!</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Register</h2>
+
+        <!-- Display all errors at the top of the form -->
+        {% if form.errors %}
+        <div class="error-message">
+            {{ form.errors.as_text|striptags }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <!-- Username Field -->
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+
+            <!-- Password1 Field -->
+            <div class="form-group">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+            </div>
+
+            <!-- Password2 Field -->
+            <div class="form-group">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+            </div>
+
+            <button type="submit">Sign Up</button>
+        </form>
+
+        <h3>Already have an account?</h3> 
+        <a href="{% url 'login' %}">Log in</a>
+    </div>
+</body>
+</html>

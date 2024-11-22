@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Profile</title>
+    <style>
+        body {
+            background-color: black; /* Black background outside the container */
+            color: #000; /* Text color inside the form */
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #d8bfd8; /* Light purple background */
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+        }
+
+        h1 {
+            text-align: center;
+            color: black; /* Black bold heading */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: black; /* Bold black text */
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid rgb(49, 5, 5); /* Silver line separating each field */
+            border-radius: 5px;
+            background-color: #f0e6f6; /* Slightly lighter purple input background */
+            color: black;
+        }
+
+        .form-group {
+            border-bottom: 2px solid rgb(32, 5, 5); /* Silver line separating each group */
+            padding-bottom: 10px;
+        }
+
+        .submit-btn {
+            background-color: #8a2be2; /* Velvet purple button */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .submit-btn:hover {
+            background-color: #6a1bb5; /* Darker purple on hover */
+        }
+
+        .form-control:focus {
+            outline: none;
+            border: 2px solid #8a2be2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Update Profile</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="{{ u_form.username.id_for_label }}">Username</label>
+                {{ u_form.username }}
+            </div>
+            
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="{{ u_form.email.id_for_label }}">Email</label>
+                {{ u_form.email }}
+            </div>
+            
+            <!-- Profile Picture Field -->
+            <div class="form-group">
+                <label for="{{ p_form.image.id_for_label }}">Profile Picture</label>
+                {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" alt="Profile Picture" class="profile-picture" style="max-width: 100px; max-height: 100px;">
+                    <!-- Display the current profile picture as an image without the 'Currently' text -->
+                {% endif %}
+                {{ p_form.image }} <!-- Field to upload/change the profile picture -->
+            </div>
+            
+            <!-- Name Field -->
+            <div class="form-group">
+                <label for="{{ p_form.name.id_for_label }}">Name</label>
+                {{ p_form.name }}
+            </div>
+            
+            <!-- Bio Field -->
+            <div class="form-group">
+                <label for="{{ p_form.bio.id_for_label }}">Bio</label>
+                {{ p_form.bio }}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Update</button>
+        </form>
+    </div>
+
+</body>
+</html>

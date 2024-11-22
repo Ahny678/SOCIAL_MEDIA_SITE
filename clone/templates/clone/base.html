@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Adjusted to move content to the top */
+        }
+
+        h1 {
+            color: #9400D3; /* Velvet purple */
+            font-size: 5rem; /* Made the heading bigger */
+            margin-top: 20px;
+            margin-bottom: 40px; /* Added space below the heading */
+            text-transform: uppercase;
+        }
+
+        .icon-container {
+            background-color: silver;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); /* Light glow effect */
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+            margin: auto; /* Centering the icon container */
+        }
+
+        .icon-box {
+            text-align: center;
+            margin: 20px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .icon-box:hover {
+            transform: scale(1.2);
+        }
+
+        .icon-box i, .icon-box label {
+            color: #9400D3; /* Velvet purple */
+        }
+
+        .icon-box i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .icon-box label {
+            font-size: 1.2rem;
+            display: block;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>TOUCH BASE!</h1> <!-- Updated heading with larger font size -->
+    <div class="icon-container">
+        <!-- Profile Icon -->
+        <a href="profile" class="icon-box">
+            <i class="fas fa-user"></i>
+            <label>Profile</label>
+        </a>
+
+        <!-- Logout Icon -->
+        <a href="logout" class="icon-box">
+            <i class="fas fa-sign-out-alt"></i>
+            <label>Logout</label>
+        </a>
+
+        <!-- Feed Icon -->
+        <a href="feed" class="icon-box">
+            <i class="fas fa-rss"></i>
+            <label>Feed</label>
+        </a>
+
+        <!-- Inbox Icon -->
+        <a href="{% url 'inbox' %}" class="icon-box">
+            <i class="fas fa-envelope"></i>
+            <label>Inbox</label>
+        </a>
+
+        <!-- Search Icon -->
+        <a href="{%  url 'gts' %}" class="icon-box">
+            <i class="fas fa-search"></i>
+            <label>Search</label>
+        </a>
+        <!-- Notifications Icon -->
+        <a href="{% url 'notifs' %}" class="icon-box">
+            <i class="fas fa-bell"></i>
+            <label>Notifications</label>
+        </a>
+
+    </div>
+</body>
+</html>

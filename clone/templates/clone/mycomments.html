@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #3a0d0d;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: white;
+        }
+
+        /* Back arrow icon styling */
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .back-arrow:hover {
+            color: #cccccc;
+        }
+
+        .all-comments {
+            width: 50%;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .comment-box {
+            border: 2px solid purple;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: white;
+            position: relative;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+
+        .comment-author {
+            float: left;
+            color: #555;
+        }
+
+        .comment-date {
+            float: right;
+            color: #999;
+        }
+
+        .comment-content {
+            margin-top: 10px;
+            clear: both;
+        }
+
+        .comment-form {
+            width: 50%;
+            margin-top: 20px;
+            background-color: black;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comment-form textarea {
+            width: 80%;
+            height: 50px;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 14px;
+            resize: none;
+            background-color: rgb(197, 166, 188);
+        }
+
+        .comment-form button {
+            padding: 10px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+        }
+
+        .scroll-to-comment {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back arrow icon outside the comment div -->
+    <a href="{% url 'mv' post.id %}" class="back-arrow">&#x2190; Back to video</a>
+
+    <h1>{{ post.user }} -- {{ post.description }}</h1>
+
+    {% if comments %}
+    <div class="all-comments scroll-to-comment" id="commentSection">
+        {% for comment in comments %}
+        <div class="comment-box">
+            <div class="comment-header">
+                <span class="comment-author">{{ comment.author }}</span>
+                <span class="comment-date">{{ comment.created_on|date:"m-d" }}</span>
+            </div>
+            <div class="comment-content">
+                <p>{{ comment.comment }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="comment-form">
+        <form method="POST" action="#">
+            {% csrf_token %}
+            {{ comment_form.comment }}
+            <button type="submit">&#x27A4;</button> <!-- Send icon -->
+        </form>
+    </div>
+
+    <script>
+        // Automatically scroll to the bottom of the comments section when a new comment is added
+        const commentSection = document.getElementById('commentSection');
+        if (commentSection) {
+            commentSection.scrollTop = commentSection.scrollHeight;
+        }
+    </script>
+</body>
+</html>

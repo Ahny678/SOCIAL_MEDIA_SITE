@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Post</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #8a2be2;
+            font-family: Arial, sans-serif;
+        }
+  
+        h3 {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .submit-btn {
+            background-color:#6a1bb5;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            float: right;
+        }
+        .cancel-btn {
+            background-color:#6a1bb5;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            float: left;
+        }
+        .submit-btn:hover {
+            background-color: #b51b1b;
+        }
+        .cancel-btn:hover {
+            background-color: #1bb53c;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Delete Post</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h3>Are you sure you want to delete the post?</h3>
+           
+            <button type="submit" class="submit-btn">Yes!</button>
+            <a href="{% url 'mv' object.id %}" class="cancel-btn">No.</a>
+        </form>
+    </div>
+
+</body>
+</html>

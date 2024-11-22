@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: black;
+            color: #9b59b6;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-top: 30px;
+            color: #9b59b6;
+            text-shadow: 2px 2px #000;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            border-bottom: 3px solid purple;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .thread-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh; /* Vertically center the content */
+        }
+
+        .single-thread {
+            width: 60%;
+            max-width: 600px;
+            background-color: #1c1c1c;
+            border: 2px solid #9b59b6;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .single-thread a {
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .single-thread a:hover {
+            color: #9b59b6;
+        }
+
+        .single-thread p {
+            background-color: black;
+            padding: 15px;
+            border: 2px solid #9b59b6;
+            border-radius: 8px;
+            font-size: 1.2em;
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .single-thread p:hover {
+            background-color: #9b59b6;
+            color: black;
+            cursor: pointer;
+        }
+
+        .single-thread p:active {
+            background-color: #6c3483;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Start a Convo!</h1>
+    <div class="thread-container">
+        <div class="single-thread">
+            {% for thread in threads %}
+            <a href="{% url 'thread' thread.pk %}">
+                <p>{{thread.user}} - {{ thread.receiver }}</p>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
