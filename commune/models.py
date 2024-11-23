@@ -6,7 +6,7 @@ from clone.models import Comment, VideoPost
 class ThreadModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
-    receiver_pfp = models.FileField(upload_to='thread_pfps', blank=True, null=True)
+    receiver_pfp = models.ImageField(upload_to='thread_pfps', blank=True, null=True)
 
 class MessaegModel(models.Model):
     thread = models.ForeignKey(ThreadModel, on_delete=models.CASCADE, blank=True, null=True)

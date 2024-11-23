@@ -47,7 +47,7 @@ class CreateThread(View):
                 thread = ThreadModel(
                     user = request.user,
                     receiver=receiver,
-                     receiver_pfp = receiver.profile.image 
+                    receiver_pfp = receiver.profile.image 
                 )
                 thread.save()
                 return redirect('thread', pk=thread.pk )
@@ -73,13 +73,21 @@ class CreateMessage(View):
             receiver = thread.user
         else:
             receiver = thread.receiver
-        message = MessaegModel(
-        thread= thread,
-        sender_user= request.user,
-        receiver_user=receiver,
-        body=request.POST.get('message')
-        )
-        message.save()
+
+        form = MessageForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            message = form.cleaned_data.get('message')
+            image = form.cleaned_data.get('image')
+
+            message = MessaegModel(
+            thread= thread,
+            sender_user= request.user,
+            receiver_user=receiver,
+            body=message,
+            image=image
+            )
+            message.save()
         return redirect('thread', pk=pk)
 
 def notifs(request):

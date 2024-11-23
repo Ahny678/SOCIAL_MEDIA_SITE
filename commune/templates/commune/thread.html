@@ -92,11 +92,13 @@
 
         /* Auto scroll to the latest message */
         .messages-container {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: scroll; /* Ensures scroll bar is always available */
+            max-height: calc(100vh - 150px); /* Adjust height to ensure form is always visible */
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            overflow-y: auto;
-            height: calc(100vh - 150px); /* Adjust height to fit form */
+            
         }
 
         .message-form textarea:focus {
@@ -108,10 +110,10 @@
     <div class="container">
         <!-- Receiver Info Section -->
         <div class="receiver-info">
-            {% if receiver_pfp %}
-            <img src="{{ receiver_pfp.url }}" alt="Receiver Profile">
+            {% if thread.receiver_pfp %}
+            <img src="{{ thread.receiver_pfp.url }}" alt="Receiver Profile">
             {% endif %}
-            {% if thread.receiver == request.user%}
+            {% if thread.receiver == request.user %}
                 <h2>{{thread.user}}</h2>
             {% else %}
                 <h2>{{thread.receiver}}</h2>
@@ -119,33 +121,56 @@
         </div>
 
         <!-- Messages Display Container -->
-        <div class="messages-container">
+        <div class="messages-container" id="messages-container">
             {% if messages_list.all.count == 0 %}
                 <p>No messages yet</p>
             {% else %}
                 {% for message in messages_list %}
-                    <div class="message {% if message.sender_user == request.user %}sent{% else %}received{% endif %}">
-                        {{ message.body }}
+                    <div class="message {% if message.sender_user == request.user %}sent{% else %}received{% endif %}" 
+                         {% if forloop.last %} id="last-message" {% endif %}>
+                        <!-- Display message text -->
+                        {% if message.body %}
+                            {{ message.body }}
+                        {% endif %}
+                        
+                        <!-- Display message image if available -->
+                        {% if message.image %}
+                            <a href="{{ message.image.url }}" target="_blank">
+                                <img src="{{ message.image.url }}" alt="Message Image" style="max-width: 200px; max-height: 200px;">
+                            </a>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% endif %}
         </div>
 
         <!-- Message Submission Form -->
-        <div class="message-form">
-            <form method="POST" action="{% url 'createmessage' thread.pk %}" enctype="multipart/form-data" style="width: 100%;">
+        <div class="message-form" style="display: flex; align-items: center;">
+            <form method="POST" action="{% url 'createmessage' thread.pk %}" enctype="multipart/form-data" style="width: 100%; display: flex; align-items: center;">
                 {% csrf_token %}
-                <textarea name="message" rows="1" placeholder="Type your message..." style="width: 90%; padding: 10px; border-radius: 10px; border: none; background-color: #1c1c1c; color: white;"></textarea>
-                <button type="submit" style="padding: 10px 20px; margin-left: 10px; background-color: #9b59b6; color: white; border: none; border-radius: 10px; cursor: pointer;">Send</button>
+                <!-- Textarea for message input -->
+                <textarea name="message" rows="1" placeholder="Type your message..." style="width: 70%; padding: 10px; border-radius: 10px; border: none; background-color: #1c1c1c; color: white;"></textarea>
+                
+                <!-- Image upload icon (camera icon using Unicode) -->
+                <label for="image-upload" style="padding: 10px; cursor: pointer; font-size: 24px; margin-left: auto;">
+                    &#128247;  <!-- Unicode for camera icon -->
+                </label>
+                <input type="file" id="image-upload" name="image" style="display: none;">
+                
+                <!-- Submit button -->
+                <button type="submit" style="padding: 10px 20px; background-color: #5cb659; color: white; border: none; border-radius: 10px; cursor: pointer; margin-left: 10px;">Send</button>
             </form>
         </div>
-        
     </div>
 
     <script>
-        // Scroll to the bottom of the messages container to show the latest messages
-        const messagesContainer = document.querySelector('.messages-container');
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // Scroll to the last message when the page loads
+        document.addEventListener("DOMContentLoaded", function() {
+            var lastMessage = document.getElementById('last-message');
+            if (lastMessage) {
+                lastMessage.scrollIntoView();
+            }
+        });
     </script>
 </body>
 </html>
